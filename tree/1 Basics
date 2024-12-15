@@ -1,0 +1,66 @@
+Tree: 
+  It's a special type of graph having unique path between any of the 2 nodes.
+  A connected graph of N nodes without any cycle
+  Number  of connected component in a tree is alwayas 2
+  Number of edge in a tree having N nodes are (N-1)
+  Sum of degree of all the node is 2 * (N -1 )
+
+Parent of Tree:
+  While moving towards root  of the tree, the first  node which we encounter is the parent of tree.
+
+Ancestor of a Node:
+  When we move from any node to root, all the nodes which comes in path are called ancestor of the Node.
+
+Decendants of a Node:
+  All the nodes which generally comes below to the node, Or we can say all the c(N) c(c(N)) c(c(c(N))) 
+
+Level of a Node:
+  Distance of a Node from the root
+
+Subtree of a Node N:
+  combination of all the nodes which ahs ancestor as N.
+
+Lowest Common Ancestor (x,y):
+  first ancestor which is common for both x and y
+
+Algorithms:
+
+1. Finding level of Nodes
+  We will start with a root  element having a level  variable 0
+  Iterate through all the children of root using either bfs or dfs and assign the level of nodes
+
+  CODE:
+    void dfs(int root,int parent, vector<int> &level){
+        if(parent == -1) 
+        else level[root] = level[parent] + 1;
+
+        for(auto  child:edge[root]) dfs()
+    }
+
+2. Find the parent of each Node
+  This can be done at the time of preparing adjency list.
+  We can run a dfs and assign every child it's parent in the same way we did for levels.
+
+3. Find the subtree size of each Node:
+  We need to calulate all the descendents of a Node N
+  We can use dfs to find this
+
+  CODE:
+    int  dfs(){
+      int count = 0;
+      for(auto child:adj[root]){
+          count += (1 + dfs());
+      }
+      subtree[root] = total;
+    }
+
+    void dfs(){
+      for(auto child:adj[root]){
+          dfs(child);
+          subtree[root] += subtree[child]
+      }
+      subtree[root] += 1;
+    }
+
+4. 
+  
