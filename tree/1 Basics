@@ -55,11 +55,11 @@ Algorithms:
     }
 
     void dfs(){
+        subtree[root] = 1;
       for(auto child:adj[root]){
           dfs(child);
           subtree[root] += subtree[child]
       }
-      subtree[root] += 1;
     }
 
 4. 
