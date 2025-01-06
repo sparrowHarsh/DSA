@@ -1,0 +1,77 @@
+/**
+*    Coded by :  Harsh vardhan 
+**/
+ 
+We can see segment tree as a representaion of a tree in an array. Where the left child index is ar[index*2] and right child is ar[index*2+1]
+
+Step 1: We need to build the segment tree. 
+void build(ll index,ll start,ll end){
+    if(start == end){
+        sgt[index] = arr[start];
+        return;
+    }
+ 
+    ll mid = (start + end)/2;
+    build(2*index,start,mid);   // left child
+    build(2*index+1,mid+1,end); // right child
+ 
+    sgt[index] = sgt[2*index] + sgt[2*index + 1];
+}
+
+// Update condition
+void update(ll index,ll start,ll end,ll pos,ll value){
+    if(start == end){
+        arr[pos] = value;
+        sgt[index] = value;
+        return;
+    }
+ 
+    ll mid = (start + end)/2;
+    if(pos <= mid){
+        update(2*index,start,mid,pos,value);
+    }else{
+        update(2*index+1,mid+1,end,pos,value);
+    }
+ 
+    sgt[index] = sgt[2*index] + sgt[2*index+1];
+}
+
+// Query condition
+ll query(ll index,ll start,ll end,ll l,ll r){
+    if(start>=l && end<=r){
+        // compelte overlapping
+        return sgt[index];
+    }else if(start>r || end<l){
+        // no overlapping
+        return 0;
+    }else{
+        ll mid = (start + end) / 2;
+        ll leftAns = query(2*index,start,mid,l,r);
+        ll rightAns = query(2*index + 1,mid+1,end,l,r);
+ 
+        return (leftAns + rightAns);
+    }
+}
+ 
+ 
+void harsh(){
+    ll n,q;cin>>n>>q;
+    sgt.resize(4*n);
+    arr.resize(n);
+ 
+    for(ll i=0;i<n;i++) cin>>arr[i];
+ 
+    // build initial segment tree
+    build(1,0,n-1);
+    
+    for(ll i=0;i<q;i++){
+        ll a,b,c;
+        cin>>a>>b>>c;
+        if(a == 1){
+            update(1,0,n-1,b-1,c);
+        }else{
+            ll ans = query(1,0,n-1,b-1,c-1);
+            cout<<ans<<'\n';
+        }
+    }
+}
