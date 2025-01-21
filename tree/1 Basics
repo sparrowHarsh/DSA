@@ -62,5 +62,84 @@ Algorithms:
       }
     }
 
-4. 
+4. Finding Kth parent (Binary Exponention)
+We can be asked to find kth parent of (a,b) and it will be in the form of queries. For this we will use Binary exponention concept.
+
+We will use Bitwise concept to store value of parent. We can store parent in the form of bit as we know till 1e9 we have 32 set bits. So we will store till 32th
+parent of all the given node by this we can find kth parent using bitwise operations.
+
+step1: calculate imidiate parent of j, i.e. first parent of all the nodes
+// parentAr[i][j] -> ith parent of j 
+void dfs(ll root, ll parent, vector<ll> adj[], vector<vector<ll>> &parentAr){
+	parentAr[0][root] = parent;
+ 
+	for(auto child:adj[root]){
+		if(parent != child){
+			dfs(child,root,adj,parentAr);
+		}
+	}
+}
+
+step2: Use Binary exponentation to relative parents. Ith parent of j will be (i-1)th parent of parentof(j).
+Eg: 1->2->3 here 1 is parent of 2 and 2 is of 3. So we can say that 2nd parent of 3 will be 1st parent of 2. 
+It means that 1st(i-1th)parent of 2 is 2nd(ith) parent of 3.
+
+for(int i=1;i<32;i++){
+  for(int j=1;j<=n;j++){
+    // 1th parent of node j =  0th parent of parentof(j)
+    ll intermediate = parentAr[i-1][j];  
+    if(intermediate != -1) parentAr[i][j] = parentAr[i-1][intermediate];
+  }
+}
+
+// we need to find kth parent so we will iterate till 32 bit and if ith bit is set then we will move our parent to ith parent
+for(int j=0;j<32;j++){
+  ll x = (1ll<<j) & k;
+
+  if(x > 0){
+      par = parentAr[j][par];
+  }
+
+  if(par == -1) break;
+}
+
+
+5. Lowest Common Ancestor:
+            Lowest common Ancestor is the node which is the first common parent of given nodes (a and b) . 
+            First common Node while traversing towards root. Brute force is easy, we can run 2 DFS and find it in O(N) time.
+
+Optimise Approach: We will use Binary exponentation concept to find this.
+step1: Do all the steps needed in Finding kth parent.
+
+step2: This will be the final step, Now we know kth parent of all the nodes. To find LCA first we need to calculate level of both nodes. If it is not same we have 
+to make it same. This thing you can draw on paper and visualize this. To do this we will use again bit manupulation technique.
+
+ll lv1 = level[node1], lv2 = level[node2];
+if(lv2 > lv1){
+    swap(node1,node2);
+}
+
+ll diff = abs(lv1 - lv2);
+if(lv1 != lv2){
+    for(int i=0;i<32;i++){
+        ll val = (diff >> i) & 1;
+        if(val > 0){
+            node1 = parentAr[i][node1];
+        }
+    }
+}
+
+Now both the nodes are at the same level.
+
+step3: assign the imidiate parent of both nodes until both nodes became same. We will do this from the last bit i.e from the highest to lowest
+for(int i=31;i>=0;i--){
+    if(parentAr[i][node1] != parentAr[i][node2]){
+        node1 = parentAr[i][node1];
+        node2 = parentAr[i][node2];
+    }
+}
+if(node1==node2) this is the LCA
+else 1st parent will be LCA
+
+
   
